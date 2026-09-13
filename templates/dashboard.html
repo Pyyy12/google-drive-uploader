@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Galeri Keluarga - Drive Space</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .swiper-pagination {
+            position: relative !important;
+            margin-top: 14px !important;
+            bottom: 0 !important;
+        }
+        .swiper-pagination-bullet {
+            background: #cbd5e1 !important;
+            opacity: 1 !important;
+            transition: all 0.3s ease;
+        }
+        .swiper-pagination-bullet-active {
+            background: #2563eb !important;
+            width: 22px !important;
+            border-radius: 9999px !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50/80 text-slate-800 antialiased min-h-screen flex">
+
+    <!-- Mobile Overlay Backdrop -->
+    <div id="mobileOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-xl md:shadow-none">
+        <div>
+            <!-- Brand Header -->
+            <div class="h-16 flex items-center justify-between px-5 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/25">
+                        <i class="fa-brands fa-google-drive text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 text-sm leading-tight">Drive Space</h2>
+                        <span class="text-[11px] text-slate-400 font-medium">Cloud Media Hub</span>
+                    </div>
+                </div>
+                <button id="closeSidebar" class="md:hidden text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="p-3.5 space-y-1">
+                <p class="px-3 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Menu Utama</p>
+                
+                <a href="/dashboard" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-semibold text-xs transition-all duration-150 bg-blue-50 text-blue-600 shadow-xs border border-blue-100">
+                    <i class="fa-solid fa-images text-sm text-blue-600"></i>
+                    Galeri Keluarga
+                </a>
+
+                <p class="px-3 pt-4 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Penyimpanan</p>
+
+                <a href="/folder/keluarga" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-medium text-xs transition-all duration-150 text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i class="fa-solid fa-users text-sm text-slate-400"></i>
+                    Folder Keluarga
+                </a>
+
+                <a href="/folder/pribadi" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-medium text-xs transition-all duration-150 text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+                    <i class="fa-solid fa-user-shield text-sm text-slate-400"></i>
+                    Folder Pribadi
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Footer Status -->
+        <div class="p-4 border-t border-slate-100">
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200/80 flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-[10px]">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-800">Token Terhubung</p>
+                    <p class="text-[10px] text-slate-400">Google Drive Aktif</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Top App Bar -->
+        <header class="h-16 bg-white/90 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 md:px-8 sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button id="openSidebar" class="md:hidden w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 cursor-pointer">
+                    <i class="fa-solid fa-bars-staggered text-sm"></i>
+                </button>
+                <div>
+                    <h1 class="font-bold text-slate-900 text-sm sm:text-base">Koleksi Foto Keluarga</h1>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Sinkronisasi otomatis dengan Google Drive</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+                <a href="/folder/keluarga" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-xs shadow-blue-500/20 transition">
+                    <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+                    <span>Unggah Foto</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="flex-1 p-4 sm:p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
+
+            <!-- Flash Notification -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flex items-start gap-3 p-3.5 rounded-xl text-xs border transition-all shadow-xs {% if category == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800{% else %}bg-rose-50 border-rose-200 text-rose-800{% endif %}">
+                    <i class="fa-solid {% if category == 'success' %}fa-circle-check text-emerald-500{% else %}fa-circle-exclamation text-rose-500{% endif %} text-base mt-0.5"></i>
+                    <span class="leading-relaxed font-medium">{{ message }}</span>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <!-- SECTION 1: SLIDER FOTO KELUARGA -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 p-5 md:p-6 shadow-xs">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-film"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Sorotan Galeri</h2>
+                            <p class="text-[11px] text-slate-400">Geser untuk meninjau foto terpilih</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-1.5">
+                        <button class="slide-prev w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition cursor-pointer">
+                            <i class="fa-solid fa-chevron-left text-[11px]"></i>
+                        </button>
+                        <button class="slide-next w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition cursor-pointer">
+                            <i class="fa-solid fa-chevron-right text-[11px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {% if images and images|length > 0 %}
+                    <div class="swiper familySwiper overflow-hidden">
+                        <div class="swiper-wrapper py-1">
+                            {% for img in images %}
+                                <div class="swiper-slide bg-white rounded-xl overflow-hidden border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-200 flex flex-col group">
+                                    <div class="h-44 sm:h-48 w-full overflow-hidden bg-slate-100/70 relative flex items-center justify-center p-2">
+                                        <img src="/image/{{ img.id }}" alt="{{ img.name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300" loading="lazy">
+                                        <div class="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition duration-200 flex items-center gap-1.5">
+                                            <!-- Tombol Edit Nama di Slider -->
+                                            <button onclick="openRenameModal('{{ img.id }}', '{{ img.name }}')" class="w-7 h-7 rounded-lg bg-white/95 text-slate-700 hover:text-blue-600 flex items-center justify-center shadow-xs text-xs cursor-pointer" title="Ubah Nama">
+                                                <i class="fa-solid fa-pen text-[10px]"></i>
+                                            </button>
+                                            <a href="{{ img.webViewLink }}" target="_blank" class="w-7 h-7 rounded-lg bg-white/95 text-slate-700 hover:text-blue-600 flex items-center justify-center shadow-xs text-xs" title="Buka di Drive">
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 bg-white border-t border-slate-100 flex items-center justify-between">
+                                        <div class="truncate mr-2">
+                                            <p class="font-semibold text-slate-800 text-xs truncate" title="{{ img.name }}">{{ img.name }}</p>
+                                            <p class="text-[10px] text-slate-400 mt-0.5 font-medium">
+                                                {{ (img.size|int / 1024 / 1024)|round(2) if img.size else '0' }} MB
+                                            </p>
+                                        </div>
+                                        <button onclick="openRenameModal('{{ img.id }}', '{{ img.name }}')" class="text-slate-400 hover:text-blue-600 p-1 rounded-md transition" title="Edit nama">
+                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 bg-slate-50/50 border border-dashed border-slate-200 rounded-xl">
+                        <i class="fa-solid fa-image text-slate-300 text-2xl mb-2"></i>
+                        <h3 class="font-medium text-slate-600 text-xs">Belum ada foto yang diunggah</h3>
+                        <a href="/folder/keluarga" class="inline-block mt-2 text-blue-600 hover:underline text-xs font-semibold">Unggah Foto Sekarang</a>
+                    </div>
+                {% endif %}
+            </section>
+
+            <!-- SECTION 2: GRID SEMUA DAFTAR FOTO -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 p-5 md:p-6 shadow-xs">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900">Arsip Foto ({{ images|length }})</h2>
+                            <p class="text-[11px] text-slate-400">Klik ikon pensil untuk mengubah nama berkas</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if images and images|length > 0 %}
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                        {% for img in images %}
+                            <div class="bg-slate-50/60 rounded-xl border border-slate-200/80 overflow-hidden hover:border-blue-300 hover:shadow-xs transition duration-200 flex flex-col justify-between group">
+                                <div class="h-28 sm:h-32 w-full overflow-hidden bg-slate-100 flex items-center justify-center p-2 relative">
+                                    <img src="/image/{{ img.id }}" alt="{{ img.name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-200" loading="lazy">
+                                    <button onclick="openRenameModal('{{ img.id }}', '{{ img.name }}')" class="absolute top-2 right-2 w-6 h-6 rounded-md bg-white/90 text-slate-600 hover:text-blue-600 opacity-0 group-hover:opacity-100 transition shadow-xs flex items-center justify-center cursor-pointer" title="Ubah Nama">
+                                        <i class="fa-solid fa-pen text-[9px]"></i>
+                                    </button>
+                                </div>
+                                <div class="p-2.5 bg-white border-t border-slate-100">
+                                    <p class="font-medium text-slate-800 text-[11px] truncate" title="{{ img.name }}">{{ img.name }}</p>
+                                    <div class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-slate-50">
+                                        <span class="text-[10px] text-slate-400 font-medium">{{ (img.size|int / 1024 / 1024)|round(2) if img.size else '0' }} MB</span>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="openRenameModal('{{ img.id }}', '{{ img.name }}')" class="text-slate-400 hover:text-blue-600 text-[11px] cursor-pointer" title="Ubah Nama">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <a href="{{ img.webViewLink }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-[10px] font-semibold flex items-center gap-0.5">
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL POPUP: UBAH NAMA BERKAS -->
+    <div id="renameModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 transform transition-all">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm">Ubah Nama Berkas</h3>
+                </div>
+                <button onclick="closeRenameModal()" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form id="renameForm" method="post" action="">
+                <div class="mb-5">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Nama Berkas Baru</label>
+                    <input type="text" id="renameInput" name="new_name" required autofocus class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 focus:bg-white focus:outline-none focus:border-blue-500 transition">
+                    <p class="text-[10px] text-slate-400 mt-1.5">Ekstensi file (.jpg, .png) akan tetap dipertahankan secara otomatis.</p>
+                </div>
+
+                <div class="flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeRenameModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-xs shadow-blue-500/20 transition cursor-pointer">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Swiper JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Modal Rename Handler
+        const renameModal = document.getElementById('renameModal');
+        const renameForm = document.getElementById('renameForm');
+        const renameInput = document.getElementById('renameInput');
+
+        function openRenameModal(fileId, currentName) {
+            renameForm.action = '/rename/' + fileId;
+            // Ambil nama tanpa ekstensi saat ditampilkan di input form
+            const dotIndex = currentName.lastIndexOf('.');
+            const nameWithoutExt = dotIndex !== -1 ? currentName.substring(0, dotIndex) : currentName;
+            renameInput.value = nameWithoutExt;
+            renameModal.classList.remove('hidden');
+            setTimeout(() => renameInput.focus(), 100);
+        }
+
+        function closeRenameModal() {
+            renameModal.classList.add('hidden');
+        }
+
+        // Tutup modal jika klik di luar box
+        renameModal.addEventListener('click', function(e) {
+            if (e.target === renameModal) closeRenameModal();
+        });
+
+        // Sidebar Toggle Mobile
+        const sidebar = document.getElementById('sidebar');
+        const openSidebar = document.getElementById('openSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            mobileOverlay.classList.toggle('hidden');
+        }
+
+        if (openSidebar) openSidebar.addEventListener('click', toggleMenu);
+        if (closeSidebar) closeSidebar.addEventListener('click', toggleMenu);
+        if (mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+
+        // Inisialisasi Swiper
+        const swiper = new Swiper('.familySwiper', {
+            slidesPerView: 1.25,
+            spaceBetween: 14,
+            loop: false,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.slide-next',
+                prevEl: '.slide-prev',
+            },
+            breakpoints: {
+                480: { slidesPerView: 2, spaceBetween: 14 },
+                768: { slidesPerView: 2.7, spaceBetween: 16 },
+                1024: { slidesPerView: 3.5, spaceBetween: 18 },
+                1280: { slidesPerView: 4.2, spaceBetween: 20 }
+            }
+        });
+    </script>
+</body>
+</html>
